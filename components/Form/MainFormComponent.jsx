@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import useAxios from '@/hooks/useAxios';
-import Dropdown from './Dropdown';
-import PropertyDropdown from './PropertyDropdown';
+import React, { useState, useEffect } from "react";
+import useAxios from "@/hooks/useAxios";
+import Dropdown from "./Dropdown";
+import PropertyDropdown from "./PropertyDropdown";
 
 const YourComponent = () => {
   const [selectedMainCategory, setSelectedMainCategory] = useState(null);
@@ -9,25 +9,25 @@ const YourComponent = () => {
   const [selectedValues, setSelectedValues] = useState({});
   const [showTable, setShowTable] = useState(false);
 
-  const { data: mainCategories } = useAxios('https://staging.mazaady.com/api/v1/get_all_cats');
+  const { data: mainCategories } = useAxios(
+    "https://staging.mazaady.com/api/v1/get_all_cats"
+  );
 
   const { data: properties } = useAxios(
     selectedSubCategory
-      ? 'https://staging.mazaady.com/api/v1/properties?cat=' + selectedSubCategory.value
-      : ''
+      ? "https://staging.mazaady.com/api/v1/properties?cat=" +
+          selectedSubCategory.value
+      : ""
   );
-
 
   const handlePropertySelect = async (property, selectedOption) => {
     setSelectedValues((prev) => ({
       ...prev,
-      'Main Category': selectedMainCategory?.label,
-      'Subcategory': selectedSubCategory?.label,
+      "Main Category": selectedMainCategory?.label,
+      Subcategory: selectedSubCategory?.label,
       ...(property ? { [property.name]: selectedOption?.label } : {}),
     }));
   };
-  
-  
 
   useEffect(() => {
     if (!mainCategories) {
@@ -59,24 +59,36 @@ const YourComponent = () => {
   const handleShowTable = () => {
     setShowTable(true);
     const selectedData = {
-      'Main Category': selectedMainCategory?.label,
-      'Subcategory': selectedSubCategory?.label,
+      "Main Category": selectedMainCategory?.label,
+      Subcategory: selectedSubCategory?.label,
       ...selectedValues,
     };
-  
+
     setSelectedValues(selectedData);
   };
 
   const handleBackToForm = () => {
     setShowTable(false);
-    setSelectedValues({})
+    setSelectedValues({});
   };
 
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100">
-      <div className={`w-[50%] bg-white p-8 rounded shadow-lg ${showTable ? 'hidden' : 'block'}`}>
+      <div
+        className={`w-full lg:w-[50%] bg-white p-8 rounded shadow-lg ${
+          showTable ? "hidden" : "block"
+        }`}
+      >
         <Dropdown
-          options={mainCategories ? mainCategories.data.categories.map(category => ({ value: category.id, label: category.name, children: category.children })) : []}
+          options={
+            mainCategories
+              ? mainCategories.data.categories.map((category) => ({
+                  value: category.id,
+                  label: category.name,
+                  children: category.children,
+                }))
+              : []
+          }
           onChange={(selectedOption) => setSelectedMainCategory(selectedOption)}
           value={selectedMainCategory}
           placeholder="Select Main Category"
@@ -84,8 +96,17 @@ const YourComponent = () => {
         />
 
         <Dropdown
-          options={selectedMainCategory ? selectedMainCategory?.children?.map(child => ({ value: child.id, label: child.name })) : []}
-          onChange={(selectedOption) => { setSelectedSubCategory(selectedOption); }}
+          options={
+            selectedMainCategory
+              ? selectedMainCategory?.children?.map((child) => ({
+                  value: child.id,
+                  label: child.name,
+                }))
+              : []
+          }
+          onChange={(selectedOption) => {
+            setSelectedSubCategory(selectedOption);
+          }}
           value={selectedSubCategory}
           placeholder="Select Subcategory"
           className="mb-4"
@@ -96,7 +117,9 @@ const YourComponent = () => {
             <PropertyDropdown
               key={property.id}
               property={property}
-              onSelect={(selectedOption) => handlePropertySelect(property, selectedOption)}
+              onSelect={(selectedOption) =>
+                handlePropertySelect(property, selectedOption)
+              }
             />
           ))}
 
@@ -109,7 +132,11 @@ const YourComponent = () => {
       </div>
 
       {showTable && (
-        <div className={`w-[50%] bg-white p-8 rounded shadow-lg ${showTable ? 'block' : 'hidden'}`}>
+        <div
+          className={`lg:w-[50%] bg-white p-8 rounded shadow-lg ${
+            showTable ? "block" : "hidden"
+          }`}
+        >
           {renderSelectedData()}
           <button
             onClick={handleBackToForm}
