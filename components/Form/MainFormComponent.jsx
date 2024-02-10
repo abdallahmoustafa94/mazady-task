@@ -3,7 +3,7 @@ import useAxios from "@/hooks/useAxios";
 import Dropdown from "./Dropdown";
 import PropertyDropdown from "./PropertyDropdown";
 
-const YourComponent = () => {
+const MainFormComponent = () => {
   const [selectedMainCategory, setSelectedMainCategory] = useState(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [selectedValues, setSelectedValues] = useState({});
@@ -150,4 +150,4 @@ const YourComponent = () => {
   );
 };
 
-export default YourComponent;
+export default MainFormComponent;
